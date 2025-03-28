@@ -2,12 +2,12 @@ package com.hexagonal.demo.infrastructure.repositories;
 
 import com.hexagonal.demo.domain.models.User;
 import com.hexagonal.demo.domain.ports.out.UserRepositoryPort;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
 
-@Repository
+@Component
 public class JpaUserRepositoryAdapter implements UserRepositoryPort {
 
     private final UserRepository userRepository;
@@ -33,6 +33,9 @@ public class JpaUserRepositoryAdapter implements UserRepositoryPort {
 
     @Override
     public Optional<User> update(User user) {
+        if (userRepository.existsById(Long.valueOf(user.getId()))) {
+            return Optional.of(userRepository.save(user));
+        }
         return Optional.empty();
     }
 
